@@ -1,0 +1,30 @@
+﻿## Carpetas de salida (Compilación)
+[Bb]in/
+[Ob]j/
+
+## Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Archivos de configuración de publicación
+*.publishsettings
+
+## Herramientas de .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Bases de datos locales
+*.mdf
+*.ldf
+*.sdf
+.env
+secrets.json
+connections.config
+
+## Paquetes NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
