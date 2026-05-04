@@ -147,7 +147,7 @@ namespace apiRESTAdminUsuarioFull.Controllers
             return objRespuesta;
         }
 
-        // Endpoint para consulta de usuarios vwRptUsuario
+        // Endpoint para consulta de usuarios por tipo vwRptUsuario
         [HttpGet]
         [Route("full/usuario/vwtipousuario")]
         public clsApiStatus vwTipoUsuario()
@@ -225,6 +225,42 @@ namespace apiRESTAdminUsuarioFull.Controllers
                 objRespuesta.datos = jsonResp;
             }
             // Salida  del objeto configurado
+            return objRespuesta;
+        }
+
+        [HttpGet]
+        [Route("full/usuario/getusuario")]
+        public clsApiStatus getUsuario(string cve)
+        {
+            clsApiStatus objRespuesta = new clsApiStatus();
+            JObject jsonResp = new JObject();
+            DataSet ds = new DataSet();
+
+            try
+            {
+                clsUsuario objUsuario = new clsUsuario();
+                objUsuario.cve = cve;
+
+                ds = objUsuario.getUsuario();
+
+                objRespuesta.statusExec = true;
+                objRespuesta.ban = ds.Tables[0].Rows.Count;
+                objRespuesta.msg = "Consulta realizada exitosamente";
+
+                string jsonString = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                jsonResp = JObject.Parse($"{{\"usuario\": {jsonString}}}");
+
+                objRespuesta.datos = jsonResp;
+            }
+            catch (Exception ex)
+            {
+                objRespuesta.statusExec = false;
+                objRespuesta.msg = "Error al consultar usuario";
+                objRespuesta.ban = -1;
+                jsonResp.Add("msgData", ex.Message.ToString());
+                objRespuesta.datos = jsonResp;
+            }
+
             return objRespuesta;
         }
 

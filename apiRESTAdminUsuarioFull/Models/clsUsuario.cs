@@ -109,7 +109,7 @@ namespace apiRESTAdminUsuarioFull.Models
         public DataSet vwRptUsuario(string filtro)
         {
             // 1. La consulta SQL: El @filtro es un "espacio reservado"
-            string cadSQL = "SELECT * FROM vwRptUsuario WHERE nombre LIKE @filtro";
+            string cadSQL = "SELECT * FROM vwRptUsuario WHERE Nombre LIKE CONCAT('%', @filtro, '%') OR Usuario LIKE CONCAT('%', @filtro, '%') OR Rol LIKE CONCAT('%', @filtro, '%'); ";
 
             // 2. Definimos los objetos básicos
             MySqlConnection cnn = new MySqlConnection(cadConn);
@@ -136,6 +136,20 @@ namespace apiRESTAdminUsuarioFull.Models
             DataSet ds = new DataSet();
             // Ejecución y salida
             da.Fill(ds, "vwTipoUsuario");
+            return ds;
+        }
+
+        public DataSet getUsuario()
+        {
+            string cadSQL = "SELECT * FROM vwRptUsuario WHERE Clave = @cve";
+
+            MySqlConnection cnn = new MySqlConnection(cadConn);
+            MySqlDataAdapter da = new MySqlDataAdapter(cadSQL, cnn);
+            DataSet ds = new DataSet();
+
+            da.SelectCommand.Parameters.AddWithValue("@cve", this.cve);
+
+            da.Fill(ds, "usuario");
             return ds;
         }
 
