@@ -264,5 +264,113 @@ namespace apiRESTAdminUsuarioFull.Controllers
             return objRespuesta;
         }
 
+        [HttpPut]
+        [Route("full/usuario/updateusuario")]
+        public clsApiStatus updateUsuario([FromBody] clsUsuario modelo)
+        {
+            clsApiStatus objRespuesta = new clsApiStatus();
+            JObject jsonResp = new JObject();
+
+            try
+            {
+                clsUsuario objUsuario = new clsUsuario();
+                objUsuario.cve = modelo.cve;
+
+                // 🔎 Validar si existe
+                DataSet dsCheck = objUsuario.getUsuario();
+
+                if (dsCheck.Tables[0].Rows.Count == 0)
+                {
+                    objRespuesta.statusExec = false;
+                    objRespuesta.msg = "El usuario no existe";
+                    objRespuesta.ban = 0;
+
+                    jsonResp.Add("msgData", "No se encontró el usuario");
+                    objRespuesta.datos = jsonResp;
+
+                    return objRespuesta;
+                }
+
+                // ✏️ Asignar datos para actualizar
+                objUsuario.nombre = modelo.nombre;
+                objUsuario.apellidoPaterno = modelo.apellidoPaterno;
+                objUsuario.apellidoMaterno = modelo.apellidoMaterno;
+                objUsuario.usuario = modelo.usuario;
+                objUsuario.contrasena = modelo.contrasena;
+                objUsuario.ruta = modelo.ruta;
+                objUsuario.tipo = modelo.tipo;
+
+                DataSet ds = objUsuario.spUpdUsuario();
+
+                objRespuesta.statusExec = true;
+                objRespuesta.msg = "Usuario modificado correctamente";
+                objRespuesta.ban = 1;
+
+                jsonResp.Add("msgData", "Usuario modificado correctamente");
+                objRespuesta.datos = jsonResp;
+            }
+            catch (Exception ex)
+            {
+                objRespuesta.statusExec = false;
+                objRespuesta.msg = "Error al modificar usuario";
+                objRespuesta.ban = -1;
+
+                jsonResp.Add("msgData", ex.Message.ToString());
+                objRespuesta.datos = jsonResp;
+            }
+
+            return objRespuesta;
+        }
+
+        [HttpDelete]
+        [Route("full/usuario/deleteusuario")]
+        public clsApiStatus deleteUsuario(string cve)
+        {
+            clsApiStatus objRespuesta = new clsApiStatus();
+            JObject jsonResp = new JObject();
+
+            try
+            {
+                clsUsuario objUsuario = new clsUsuario();
+                objUsuario.cve = cve;
+
+                // 🔎 Verificar si existe
+                DataSet dsCheck = objUsuario.getUsuario();
+
+                if (dsCheck.Tables[0].Rows.Count == 0)
+                {
+                    objRespuesta.statusExec = false;
+                    objRespuesta.msg = "El usuario no existe";
+                    objRespuesta.ban = 0;
+
+                    jsonResp.Add("msgData", "No se encontró el usuario");
+                    objRespuesta.datos = jsonResp;
+
+                    return objRespuesta;
+                }
+
+                // ❌ Eliminar
+                DataSet ds = objUsuario.spDelUsuario();
+
+                objRespuesta.statusExec = true;
+                objRespuesta.msg = "Usuario eliminado correctamente";
+                objRespuesta.ban = 1;
+
+                jsonResp.Add("msgData", "Usuario eliminado correctamente");
+                objRespuesta.datos = jsonResp;
+            }
+            catch (Exception ex)
+            {
+                objRespuesta.statusExec = false;
+                objRespuesta.msg = "Error al eliminar usuario";
+                objRespuesta.ban = -1;
+
+                jsonResp.Add("msgData", ex.Message.ToString());
+                objRespuesta.datos = jsonResp;
+            }
+
+            return objRespuesta;
+        }
+
     }
 }

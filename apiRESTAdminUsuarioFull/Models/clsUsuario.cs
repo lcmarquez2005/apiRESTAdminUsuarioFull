@@ -153,6 +153,37 @@ namespace apiRESTAdminUsuarioFull.Models
             return ds;
         }
 
+        public DataSet spUpdUsuario()
+        {
+            string cadSql = "CALL spUpdUsuario('" + this.cve + "', '"
+                                                  + this.nombre + "', '"
+                                                  + this.apellidoPaterno + "', '"
+                                                  + this.apellidoMaterno + "', '"
+                                                  + this.usuario + "', '"
+                                                  + this.contrasena + "', '"
+                                                  + this.ruta + "', "
+                                                  + this.tipo + ");";
+
+            MySqlConnection cnn = new MySqlConnection(cadConn);
+            MySqlDataAdapter da = new MySqlDataAdapter(cadSql, cnn);
+            DataSet ds = new DataSet();
+
+            da.Fill(ds, "spUpdUsuario");
+            return ds;
+        }
+
+        public DataSet spDelUsuario()
+        {
+            string cadSql = "CALL spDelUsuario('" + this.cve + "');";
+
+            MySqlConnection cnn = new MySqlConnection(cadConn);
+            MySqlDataAdapter da = new MySqlDataAdapter(cadSql, cnn);
+            DataSet ds = new DataSet();
+
+            da.Fill(ds, "spDelUsuario");
+            return ds;
+        }
+
 
     }
 }
